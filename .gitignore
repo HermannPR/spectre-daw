@@ -1,0 +1,34 @@
+# 3DS homebrew build outputs
+build/
+*.3dsx
+*.elf
+
+# Local tool state
+.claude-flow/
+
+# Python (defensive)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+dist/
+*.spec
+
+# Environment
+.env
+.env.local
+
+# Node
+node_modules/
+
+# Logs
+*.log
+
+# Test cache
+.pytest_cache/
+
+# OS
+.DS_Store
+Thumbs.db
