@@ -4,6 +4,12 @@
 
 Nintendo 3DS homebrew synthesizer + piano roll. 3 drum tracks × 16 steps + 1 synth track with real-time subtractive synthesis and 3-note chord piano roll.
 
+## Why I built this
+
+I wanted to try making music software for something that isn't a phone or a laptop. A 3DS is a fixed hardware target, so there's no audio stack to lean on — you bring your own real-time loop and it has to stay stable while a step sequencer is ticking. This one does real-time subtractive synthesis, a three-track drum machine and a 3-note chord piano roll, all driven from the handheld's buttons.
+
+It builds with `make` against devkitPro/devkitARM and runs in Citra or on real hardware via Luma3DS + Homebrew Launcher. Patches and patterns save to the SD card, so you can come back to a track.
+
 ## Prerequisites
 
 - [devkitPro](https://devkitpro.org/wiki/Getting_Started) with `3ds-dev` package
