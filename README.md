@@ -1,5 +1,7 @@
 # SpectreDAW v0.3
 
+<p><img src="https://img.shields.io/badge/C-A8B9CC?style=flat-square&logo=c&logoColor=white" height="20" alt="C"> <img src="https://img.shields.io/badge/3DS-0A0A0A?style=flat-square" height="20" alt="3DS"></p>
+
 Nintendo 3DS homebrew synthesizer + piano roll. 3 drum tracks × 16 steps + 1 synth track with real-time subtractive synthesis and 3-note chord piano roll.
 
 ## Prerequisites
