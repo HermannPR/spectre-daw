@@ -1,103 +1,56 @@
-# SpectreDAW v0.3
+# SpectreDAW
 
-<p><img src="https://img.shields.io/badge/C-A8B9CC?style=flat-square&logo=c&logoColor=white" height="20" alt="C"> <img src="https://img.shields.io/badge/3DS-0A0A0A?style=flat-square" height="20" alt="3DS"></p>
+Sintetizador y secuenciador de pasos hecho en C para la Nintendo 3DS (homebrew). Es para quien quiere hacer música en una consola portátil, con un ciclo de audio propio en tiempo real.
 
-Nintendo 3DS homebrew synthesizer + piano roll. 3 drum tracks × 16 steps + 1 synth track with real-time subtractive synthesis and 3-note chord piano roll.
+## Qué hace
 
-## Why I built this
+- 3 pistas de batería (bombo, caja y hi-hat) de 16 pasos cada una.
+- Pista de sintetizador con piano roll de acordes de hasta 3 notas por paso.
+- Síntesis sustractiva en tiempo real: 2 osciladores (seno, sierra, cuadrada, triángulo y ruido), envolvente ADSR, filtro pasa bajas con resonancia y LFO.
+- 4 espacios de patch para guardar sonidos distintos.
+- BPM ajustable de 60 a 240.
+- Guarda patches y patrones en la tarjeta SD con la tecla START.
+- Se maneja con la pantalla táctil y los botones de la consola.
 
-I wanted to try making music software for something that isn't a phone or a laptop. A 3DS is a fixed hardware target, so there's no audio stack to lean on — you bring your own real-time loop and it has to stay stable while a step sequencer is ticking. This one does real-time subtractive synthesis, a three-track drum machine and a 3-note chord piano roll, all driven from the handheld's buttons.
+## Tecnologías
 
-It builds with `make` against devkitPro/devkitARM and runs in Citra or on real hardware via Luma3DS + Homebrew Launcher. Patches and patterns save to the SD card, so you can come back to a track.
+C, devkitPro con devkitARM y libctru, Makefile.
 
-## Prerequisites
+## Cómo compilarlo
 
-- [devkitPro](https://devkitpro.org/wiki/Getting_Started) with `3ds-dev` package
-- Environment variables set:
-  - `DEVKITPRO` — e.g. `C:\devkitpro` or `/opt/devkitpro`
-  - `DEVKITARM` — e.g. `%DEVKITPRO%\devkitARM`
-
-## Build
+Necesitas [devkitPro](https://devkitpro.org/wiki/Getting_Started) con el paquete `3ds-dev` y las variables de entorno `DEVKITPRO` y `DEVKITARM` configuradas.
 
 ```sh
 make
 ```
 
-Produces `SpectreDAW.3dsx` and `SpectreDAW.elf`.
+Genera `SpectreDAW.3dsx` y `SpectreDAW.elf`. Para limpiar usa `make clean`.
 
-To clean: `make clean`
+## Cómo ejecutarlo
 
-## Run
+- En el emulador Citra: File, Load File y elige `SpectreDAW.3dsx`.
+- En una consola con Luma3DS: copia el archivo a `/3ds/SpectreDAW/SpectreDAW.3dsx` en la SD y ábrelo desde el Homebrew Launcher.
 
-**Citra emulator (recommended for development):**
-- File → Load File → `SpectreDAW.3dsx`
+Los datos se guardan en `sdmc:/3ds/SpectreDAW/patches.bin` y `pattern.bin`.
 
-**Hardware (Luma3DS + Homebrew Launcher):**
-1. Copy `SpectreDAW.3dsx` to `/3ds/SpectreDAW/SpectreDAW.3dsx` on SD card.
-2. Launch via Homebrew Launcher.
+## Controles
 
-## Saved data
+| Vista | Control | Acción |
+| --- | --- | --- |
+| Secuenciador | Tocar celda de batería | Activar o apagar el paso |
+| Secuenciador | Tocar celda de sintetizador | Abrir selector de notas |
+| Secuenciador | A | Reproducir o detener |
+| Secuenciador | Y | Editar sintetizador |
+| Secuenciador | L / R | Patch anterior o siguiente |
+| Secuenciador | Cruz arriba o abajo | BPM más 5 o menos 5 |
+| Secuenciador | START | Guardar en SD y salir |
+| Selector de notas | Tocar tecla | Agregar o quitar nota del acorde |
+| Selector de notas | CLR | Limpiar el acorde del paso |
+| Selector de notas | DONE o B | Confirmar y volver |
+| Edición de sintetizador | L / R | Cambiar pestaña (OSC, ENV, FLT) |
+| Edición de sintetizador | Tocar y arrastrar | Botones de oscilador y sliders |
+| Edición de sintetizador | B | Volver al secuenciador |
 
-Patches and patterns are saved to:
-```
-sdmc:/3ds/SpectreDAW/patches.bin
-sdmc:/3ds/SpectreDAW/pattern.bin
-```
-The directory is created automatically on first save (START key).
+## Licencia
 
-## Controls
-
-### Sequencer view (default)
-
-| Input            | Action                              |
-|------------------|-------------------------------------|
-| Touch drum cell  | Toggle step on/off                  |
-| Touch synth cell | Open note picker (add pitched notes)|
-| A                | Play / Stop                         |
-| Y                | Enter Synth Edit                    |
-| L / R            | Previous / Next patch slot (1–4)    |
-| D-Pad Up/Down    | BPM + 5 / BPM - 5                   |
-| START            | Save to SD card + Exit              |
-
-### Note picker view
-
-| Input    | Action                              |
-|----------|-------------------------------------|
-| Touch key| Add / remove note from chord (max 3)|
-| CLR      | Clear chord for this step           |
-| DONE / B | Confirm and return to Sequencer     |
-
-### Synth edit view
-
-| Input    | Action                              |
-|----------|-------------------------------------|
-| B        | Return to Sequencer                 |
-| L / R    | Previous / Next tab (OSC / ENV / FLT)|
-| Touch    | Tap osc buttons, drag sliders       |
-| A        | Play / Stop                         |
-| D-Pad    | BPM adjust                          |
-
-## Synth engine
-
-Each of 4 patch slots has:
-
-| Parameter    | Range          | Description                               |
-|--------------|----------------|-------------------------------------------|
-| OSC1 type    | SIN/SAW/SQR/TRI/NOI | Oscillator waveform                  |
-| OSC2 type    | SIN/SAW/SQR/TRI/NOI | Second oscillator                    |
-| Detune       | -50..+50 cents | OSC2 pitch offset                        |
-| Mix          | OSC1 → OSC2    | Crossfade between oscillators            |
-| A / D / S / R| 0–100%         | ADSR envelope                            |
-| Cutoff       | 200–14000 Hz   | Low-pass filter cutoff                   |
-| Resonance    | 0–97%          | Filter resonance (SVF)                   |
-| LFO Rate     | 0.1–10 Hz      | LFO speed (modulates cutoff)             |
-| LFO Depth    | 0–6000 Hz      | LFO modulation amount                    |
-
-## Tracks
-
-| Row    | Sound         |
-|--------|---------------|
-| 0      | Kick (sine sweep) |
-| 1      | Snare (noise + body) |
-| 2      | Hi-Hat (detuned squares) |
-| 3      | Synth (piano roll, real-time synthesis) |
+MIT. Ver `LICENSE`.
